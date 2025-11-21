@@ -7,17 +7,26 @@
   <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
+        /* Font preload และ optimization */
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
+        
         body {
             box-sizing: border-box;
             margin: 0;
             padding: 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         * {
             box-sizing: border-box;
+            font-family: inherit;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
@@ -36,37 +45,44 @@
 
         .chart-title {
             font-size: 28px;
-            font-weight: bold;
+            font-weight: 700;
             margin-bottom: 10px;
             background: #1e3a8a;
             color: #ffffff;
             padding: 15px 30px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(30, 58, 138, 0.4);
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
         }
 
         .chart-subtitle {
             font-size: 16px;
             color: #718096;
             margin-top: 10px;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 500;
         }
 
         .subtitle-wrapper {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 0 20px;
         }
         
         .subtitle-center {
             text-align: center;
+            flex: 1;
         }
         
         .subtitle-right {
-            position: absolute;
-            right: 0;
-            top: 25px;
+            flex-shrink: 0;
+            margin-left: 20px;
         }
 
         .input-section {
@@ -227,24 +243,43 @@
             border-radius: 12px;
             margin-top: 30px;
             position: relative;
+            overflow: visible;
         }
 
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px; /* ลดช่องว่างให้สมมาตร */
             background: #48bb78;
             color: white;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 14px; /* ขนาดพื้นฐานเดียวกันทั้ง badge */
+            line-height: 1; /* ลดความต่างแนวตั้ง */
+            white-space: nowrap;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: 0.5px;
+            min-width: fit-content;
+            font-family: 'Sarabun', sans-serif;
         }
 
         .status-arrow {
-            font-size: 28px;
-            font-weight: bold;
+            font-size: 14px; /* ให้เท่ากับข้อความ */
+            font-weight: 600;
+            line-height: 1; /* ตรง baseline */
+            display: flex;
+            align-items: center;
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
             line-height: 1;
+            display: flex;
+            align-items: center;
         }
 
         .status-badge.arrow-up {
@@ -309,9 +344,10 @@
             display: flex;
             gap: 8px;
             align-items: flex-end;
-            height: calc(100% - 30px);
+            height: 100%; /* เอา calc(100% - 30px) ออกเพราะไม่ต้อง margin สำหรับ label แล้ว */
             width: 100%;
             justify-content: center;
+            position: relative;
         }
 
         .bar {
@@ -334,9 +370,12 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 600;
             color: #2d3748;
             white-space: nowrap;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Sarabun', sans-serif;
         }
 
         .x-axis-label {
@@ -344,19 +383,38 @@
             font-size: 14px;
             font-weight: 600;
             color: #2d3748;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Sarabun', sans-serif;
+            display: none; /* ซ่อน label ภายในกราฟ */
+        }
+        
+        .year-labels-external {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding: 0 60px 0 60px; /* ให้ตรงกับแท่งกราฟ */
+        }
+        
+        .year-label-external {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Sarabun', sans-serif;
+            text-align: center;
+            flex: 1;
         }
 
         .legend {
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-top: 10px;
+            margin-top: 15px;
             margin-bottom: 0;
             flex-wrap: wrap;
-            position: absolute;
-            bottom: 5px;
-            left: 60px;
-            right: 20px;
+            padding: 0 20px;
         }
 
         .legend-item {
@@ -375,12 +433,15 @@
             font-size: 14px;
             color: #4a5568;
             font-weight: 600;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Sarabun', sans-serif;
         }
 
         .target-line-dashed {
             position: absolute;
-            left: 60px;
-            right: 20px;
+            left: 0;
+            right: 0;
             height: 3px;
             background: #ed8936;
             z-index: 10;
@@ -416,29 +477,6 @@
             box-shadow: 0 2px 6px rgba(237, 137, 54, 0.3);
         }
 
-        .save-button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .btn-save {
-            background: #48bb78;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
-        }
-
-        .btn-save:hover {
-            background: #38a169;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(72, 187, 120, 0.4);
-        }
 
         @media (max-width: 768px) {
             .container {
@@ -517,7 +555,11 @@
      </div>
     </div>
     <div class="category-section">
-     <div class="input-group"><label>ค่าเป้าหมาย (แสดงเป็นเส้นสีส้มบนกราฟ)</label> <input type="number" id="targetValue" placeholder="เช่น 75" step="0.1">
+     <div class="input-group">
+       <label>ค่าเป้าหมาย (กราฟจะปรับขนาดตามค่านี้)</label> 
+       <input type="number" id="targetValue" placeholder="เช่น 75" step="0.1">
+       <small style="color: #718096; margin-top: 5px; display: block;">💡 กราฟจะปรับให้เหมาะสมกับเป้าหมายที่กำหนด</small>
+       <div id="target-feedback" style="margin-top: 5px; font-size: 12px; font-weight: 500;"></div>
      </div>
     </div>
    </div>
@@ -543,9 +585,8 @@
       <div class="bars-container" id="barsContainer"></div>
      </div>
     </div>
+    <div class="year-labels-external" id="yearLabelsExternal"></div>
     <div class="legend" id="legend"></div>
-   </div>
-   <div class="save-button-container"><button class="btn-save" onclick="saveChartAsImage()">💾 Download</button>
    </div>
   </div>
   <script>
@@ -691,49 +732,112 @@
                 document.getElementById('year3').value
             ];
 
-            let maxValue = 100;
+            // หาค่าสูงสุดจากข้อมูล
+            let dataMaxValue = 0;
             years.forEach(year => {
                 if (chartData[year]) {
                     Object.values(chartData[year]).forEach(val => {
-                        maxValue = Math.max(maxValue, val);
+                        dataMaxValue = Math.max(dataMaxValue, val);
                     });
                 }
             });
 
             const targetValue = parseFloat(document.getElementById('targetValue').value) || 0;
+            
+            // คำนวณ maxValue ที่ดีที่สุด
+            let maxValue;
             if (targetValue > 0) {
-                maxValue = Math.max(maxValue, targetValue);
+                // ถ้ามีเป้าหมาย ให้เป้าหมายเป็นพื้นฐาน
+                if (dataMaxValue > targetValue * 1.1) {
+                    // ถ้าข้อมูลสูงกว่าเป้าหมายมาก ให้ใช้ข้อมูล + buffer
+                    maxValue = Math.ceil(dataMaxValue / 10) * 10 + 10;
+                } else {
+                    // ให้เป้าหมายเป็นจุดอ้างอิง โดยเพิ่ม buffer เล็กน้อย
+                    maxValue = targetValue <= 50 ? targetValue + 20 : 
+                              targetValue <= 100 ? Math.ceil(targetValue * 1.2 / 10) * 10 : 
+                              Math.ceil(targetValue * 1.1 / 10) * 10;
+                }
+            } else {
+                // ถ้าไม่มีเป้าหมาย ใช้วิธีเดิม
+                maxValue = dataMaxValue > 0 ? Math.ceil(dataMaxValue / 10) * 10 + 10 : 100;
             }
 
-            maxValue = Math.ceil(maxValue / 10) * 10 + 10;
+            // ตรวจสอบว่า maxValue ไม่ต่ำกว่าข้อมูลจริง
+            maxValue = Math.max(maxValue, Math.ceil(dataMaxValue / 5) * 5);
+            
+            // แสดงข้อมูลการคำนวณ
+            console.log('📊 การคำนวณขนาดกราฟ:', {
+                'ข้อมูลสูงสุด': dataMaxValue,
+                'เป้าหมาย': targetValue,
+                'ขนาดกราฟ': maxValue
+            });
 
             const yLabels = document.getElementById('yAxisLabels');
             yLabels.innerHTML = '';
             for (let i = 0; i <= 5; i++) {
                 const label = document.createElement('div');
                 label.className = 'y-axis-label';
-                label.textContent = Math.round(maxValue * (5 - i) / 5);
+                const labelValue = maxValue * (5 - i) / 5;
+                // แสดงทศนิยมถ้าจำเป็น แต่ไม่เกิน 1 ตำแหน่ง
+                label.textContent = labelValue % 1 === 0 ? labelValue : labelValue.toFixed(1);
                 yLabels.appendChild(label);
             }
 
-            const targetLineContainer = document.getElementById('targetLineContainer');
-            targetLineContainer.innerHTML = '';
+            // สร้างแท่งกราฟและเส้นเป้าหมาย
+            const container = document.getElementById('barsContainer');
+            container.innerHTML = '';
+
+            // เพิ่มเส้นเป้าหมายในพื้นที่เดียวกันกับแท่งกราฟ
             if (targetValue > 0 && targetValue <= maxValue) {
                 const targetPercent = (targetValue / maxValue) * 100;
                 const targetLine = document.createElement('div');
-                targetLine.className = 'target-line-dashed';
-                targetLine.style.bottom = `${targetPercent}%`;
+                targetLine.style.cssText = `
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: ${targetPercent}%;
+                    height: 3px;
+                    background: #ed8936;
+                    z-index: 10;
+                    pointer-events: none;
+                `;
                 
                 const targetValueLabel = document.createElement('div');
-                targetValueLabel.className = 'target-value-label';
+                targetValueLabel.style.cssText = `
+                    position: absolute;
+                    right: -60px;
+                    top: -10px;
+                    background: #ed8936;
+                    color: white;
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    font-size: 13px;
+                    font-weight: bold;
+                    white-space: nowrap;
+                    box-shadow: 0 2px 6px rgba(237, 137, 54, 0.3);
+                `;
                 targetValueLabel.textContent = targetValue % 1 === 0 ? targetValue : targetValue.toFixed(1);
                 targetLine.appendChild(targetValueLabel);
                 
-                targetLineContainer.appendChild(targetLine);
+                const targetLabel = document.createElement('div');
+                targetLabel.style.cssText = `
+                    position: absolute;
+                    left: 0;
+                    top: -25px;
+                    background: #ed8936;
+                    color: white;
+                    padding: 4px 12px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: bold;
+                    white-space: nowrap;
+                    box-shadow: 0 2px 6px rgba(237, 137, 54, 0.3);
+                `;
+                targetLabel.textContent = 'เป้าหมาย';
+                targetLine.appendChild(targetLabel);
+                
+                container.appendChild(targetLine);
             }
-
-            const container = document.getElementById('barsContainer');
-            container.innerHTML = '';
 
             years.forEach(year => {
                 const yearGroup = document.createElement('div');
@@ -760,13 +864,18 @@
                     barsWrapper.appendChild(bar);
                 });
 
-                const xLabel = document.createElement('div');
-                xLabel.className = 'x-axis-label';
-                xLabel.textContent = year;
-
                 yearGroup.appendChild(barsWrapper);
-                yearGroup.appendChild(xLabel);
                 container.appendChild(yearGroup);
+            });
+
+            // สร้าง year labels ด้านนอก
+            const yearLabelsExternal = document.getElementById('yearLabelsExternal');
+            yearLabelsExternal.innerHTML = '';
+            years.forEach(year => {
+                const yearLabel = document.createElement('div');
+                yearLabel.className = 'year-label-external';
+                yearLabel.textContent = year;
+                yearLabelsExternal.appendChild(yearLabel);
             });
 
             const legend = document.getElementById('legend');
@@ -800,7 +909,22 @@
         document.getElementById('year1').addEventListener('change', updateYears);
         document.getElementById('year2').addEventListener('change', updateYears);
         document.getElementById('year3').addEventListener('change', updateYears);
-        document.getElementById('targetValue').addEventListener('input', renderChart);
+        document.getElementById('targetValue').addEventListener('input', function() {
+            renderChart();
+            
+            // แสดงข้อมูลการปรับขนาดกราฟ
+            const targetValue = parseFloat(this.value) || 0;
+            if (targetValue > 0) {
+                console.log(`📊 กราฟปรับขนาดตามเป้าหมาย: ${targetValue}`);
+                
+                // เพิ่ม visual feedback (optional)
+                const feedback = document.getElementById('target-feedback');
+                if (feedback) {
+                    feedback.textContent = `กราฟปรับขนาดตามเป้าหมาย ${targetValue}`;
+                    feedback.style.color = '#48bb78';
+                }
+            }
+        });
 
         document.getElementById('titleInput').addEventListener('input', function() {
             const value = this.value || defaultConfig.chart_title;
@@ -921,46 +1045,6 @@
                     ["status_text", config.status_text || defaultConfig.status_text]
                 ])
             });
-        }
-
-        async function saveChartAsImage() {
-            const chartContainer = document.getElementById('chartContainer');
-            const button = document.querySelector('.btn-save');
-            
-            button.textContent = '⏳ กำลังบันทึก...';
-            button.disabled = true;
-            
-            try {
-                const canvas = await html2canvas(chartContainer, {
-                    scale: 2,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true
-                });
-                
-                canvas.toBlob(function(blob) {
-                    const link = document.createElement('a');
-                    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-                    link.download = `chart-${timestamp}.png`;
-                    link.href = URL.createObjectURL(blob);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                    
-                    button.textContent = '✅ บันทึกสำเร็จ!';
-                    setTimeout(() => {
-                        button.textContent = '💾 Download';
-                        button.disabled = false;
-                    }, 2000);
-                });
-                
-            } catch (error) {
-                button.textContent = '❌ เกิดข้อผิดพลาด';
-                setTimeout(() => {
-                    button.textContent = '💾 Download';
-                    button.disabled = false;
-                }, 2000);
-            }
         }
 
         renderCategories();
