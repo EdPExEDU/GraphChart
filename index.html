@@ -557,8 +557,8 @@
         };
 
         let categories = [
-            { name: "เป้า", color: "#1e40af" },
-            { name: "ผล", color: "#fbbf24" }
+            { name: "เป้า", color: "#1e40af", showDecimal: true },
+            { name: "ผล", color: "#fbbf24", showDecimal: true }
         ];
 
         let chartData = {
@@ -589,6 +589,9 @@
                     <input type="text" value="${cat.name}" onchange="updateCategoryName(${index}, this.value)" placeholder="ชื่อหมวดหมู่">
                     <div class="color-input-group">
                         <input type="color" value="${cat.color}" onchange="updateCategoryColor(${index}, this.value)">
+                        <label style="display:flex;align-items:center;gap:8px;margin-left:8px;font-size:14px;">
+                            <input type="checkbox" ${cat.showDecimal ? 'checked' : ''} onchange="updateCategoryDecimal(${index}, this.checked)"> แสดงทศนิยม
+                        </label>
                         <button class="btn btn-danger" onclick="removeCategory(${index})">ลบ</button>
                     </div>
                 `;
@@ -606,7 +609,8 @@
             
             categories.push({
                 name: categoryName,
-                color: colors[categories.length % colors.length]
+                color: colors[categories.length % colors.length],
+                showDecimal: true
             });
             
             Object.keys(chartData).forEach(year => {
@@ -615,6 +619,13 @@
             
             renderCategories();
             updateStatusBadge(defaultConfig.status_text, defaultConfig.arrow_direction);
+        }
+
+        function updateCategoryDecimal(index, checked) {
+            if (categories[index]) {
+                categories[index].showDecimal = Boolean(checked);
+                renderChart();
+            }
         }
 
         function removeCategory(index) {
@@ -769,8 +780,9 @@
 
                     const barValue = document.createElement('div');
                     barValue.className = 'bar-value';
-                    // แสดงทศนิยม 2 ตำแหน่ง เสมอ
-                    barValue.textContent = Number(value).toFixed(2);
+                    // แสดงทศนิยมหรือจำนวนเต็มตามการตั้งค่าของหมวดหมู่
+                    const displayText = cat.showDecimal ? Number(value).toFixed(2) : Math.round(Number(value)).toString();
+                    barValue.textContent = displayText;
                     bar.appendChild(barValue);
 
                     barsWrapper.appendChild(bar);
