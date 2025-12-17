@@ -737,8 +737,8 @@
                 const label = document.createElement('div');
                 label.className = 'y-axis-label';
                 const labelValue = maxValue * (5 - i) / 5;
-                // แสดงทศนิยมถ้าจำเป็น แต่ไม่เกิน 1 ตำแหน่ง
-                label.textContent = labelValue % 1 === 0 ? labelValue : labelValue.toFixed(1);
+                // แสดงทศนิยม 2 ตำแหน่ง เสมอ
+                label.textContent = Number(labelValue).toFixed(2);
                 yLabels.appendChild(label);
             }
 
@@ -769,7 +769,8 @@
 
                     const barValue = document.createElement('div');
                     barValue.className = 'bar-value';
-                    barValue.textContent = value % 1 === 0 ? value : value.toFixed(1);
+                    // แสดงทศนิยม 2 ตำแหน่ง เสมอ
+                    barValue.textContent = Number(value).toFixed(2);
                     bar.appendChild(barValue);
 
                     barsWrapper.appendChild(bar);
@@ -809,7 +810,8 @@
                             white-space: nowrap;
                             box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
                         `;
-                        targetValueLabel.textContent = targetValue % 1 === 0 ? targetValue : targetValue.toFixed(1);
+                        // แสดงทศนิยม 2 ตำแหน่ง เสมอ
+                        targetValueLabel.textContent = Number(targetValue).toFixed(2);
                         targetLineInYear.appendChild(targetValueLabel);
                     }
                     
